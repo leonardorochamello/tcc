@@ -1,0 +1,22 @@
+kafka:
+  bootstrap: "localhost:29092"
+  topics:
+    chat: "paper_chat"
+    carrinho: "paper_carrinho"
+    recomendacao: "paper_recomendacao"
+
+mongo:
+  uri: "mongodb://localhost:27017"
+  db: "papelaria"
+
+llm:
+  provider: "ollama"      # pode ser "openai"
+  model: "llama3.1"
+  temperature: 0.1
+
+catalogo:
+  source: "csv"           # "csv" ou "mongo" 
+  csv_path: "data/catalogo.csv"
+
+recs:
+  max_itens: 3

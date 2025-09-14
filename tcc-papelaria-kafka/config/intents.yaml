@@ -1,0 +1,148 @@
+# ==========================
+# INTENÇÕES GERAIS
+# ==========================
+
+- intent: saudacao
+  patterns:
+    - "(?i)\\b(oi|ol[aá]|bom dia|boa tarde|boa noite|e?a[ií])\\b"
+
+- intent: despedida
+  patterns:
+    - "(?i)\\b(at[eé]\\s+logo|vlw|valeu|obrigad[oa]|tchau|ate mais|flw)\\b"
+
+- intent: ajuda
+  patterns:
+    - "(?i)\\b(ajuda|pode ajudar|suporte|duvida|como funciona|falar com atendente)\\b"
+
+# preço/pergunta de valor:
+- intent: preco
+  patterns:
+    - "(?i)\\b(pre[çc]o|quanto\\s*custa|valor|sai\\s+por\\s+quanto)\\b"
+
+# disponibilidade/estoque:
+- intent: disponibilidade
+  patterns:
+    - "(?i)\\b(tem\\s+(a[ií]nda)?|dispon[ií]vel|estoque|tem\\s+pra\\s+entrega)\\b"
+
+# recomendação: quando pedir sugestão/ideia
+- intent: recomendacao
+  patterns:
+    - "(?i)\\b(sugest[aã]o|recomenda|o que indicam?|ideia\\s+de\\s+presente|o que tenho\\s+para)\\b"
+
+# ==========================
+# CARRINHO E COMPRA
+# ==========================
+
+- intent: adicionar_carrinho
+  patterns:
+    - "(?i)\\b(adiciona(r)?|coloca(r)?|por\\s+no\\s+carrinho|p[oô]e\\s+no\\s+carrinho|bota(r)?)\\b"
+
+- intent: remover_item
+  patterns:
+    - "(?i)\\b(remove(r)?|tirar|excluir|retirar)\\b.*\\b(do\\s+carrinho|carrinho)\\b"
+    - "(?i)\\b(apaga(r)?|deleta(r)?)\\b.*\\b(item|produto)\\b"
+
+- intent: limpar_carrinho
+  patterns:
+    - "(?i)\\b(limpa(r)?|esvaziar|zerar)\\b.*\\b(carrinho)\\b"
+
+- intent: alterar_quantidade
+  patterns:
+    - "(?i)\\b(muda(r)?|alterar|trocar|atualizar)\\b.*\\b(quantidade|qtd)\\b"
+    - "(?i)\\b(aumenta(r)?|diminui(r)?|mais\\s+1|menos\\s+1)\\b.*\\b(item|produto|unidade)\\b"
+
+- intent: checkout
+  patterns:
+    - "(?i)\\b(checkout|finalizar\\s+(compra|pedido)|fechar\\s+pedido|concluir\\s+compra)\\b"
+
+- intent: pagar
+  patterns:
+    - "(?i)\\b(pagar|pagamento|quero\\s+pagar|cart[aã]o|pix|boleto)\\b"
+
+# ==========================
+# FRETE/ENTREGA/TROCA/GARANTIA
+# ==========================
+
+- intent: entrega
+  patterns:
+    - "(?i)\\b(entrega|frete|prazo\\s+de\\s+entrega|valor\\s+do\\s+frete|envio|cep)\\b"
+
+- intent: troca
+  patterns:
+    - "(?i)\\b(troca|devolu[cç][aã]o|devolver|arrependimento|estorno)\\b"
+
+- intent: garantia
+  patterns:
+    - "(?i)\\b(garantia|assist[eê]ncia|defeito|garantia\\s+de\\s+produto)\\b"
+
+# ==========================
+# BUSCA POR PRODUTO/CATEGORIA (sinônimos comuns)
+# ==========================
+
+# PAPÉIS
+- intent: buscar_produto
+  patterns:
+    - "(?i)\\b(papel\\s*a4|sulfite|resma\\s*a4|papel\\s+branco\\s+a4|500\\s*folhas)\\b"
+    - "(?i)\\b(papel\\s*a3|resma\\s*a3)\\b"
+    - "(?i)\\b(papel\\s+fotogr[aá]fico|fotopaper|foto\\s+glossy|papel\\s+foto)\\b"
+    - "(?i)\\b(papel\\s+manteiga)\\b"
+    - "(?i)\\b(colorset|papel\\s+colorido)\\b"
+
+# CADERNOS/AGENDA/PLANNER
+- intent: buscar_produto
+  patterns:
+    - "(?i)\\b(caderno\\s+espiral|universit[aá]rio|10\\s*materias)\\b"
+    - "(?i)\\b(caderno\\s+brochura|capa\\s+dura)\\b"
+    - "(?i)\\b(planner\\s*a5|planner\\b)\\b"
+    - "(?i)\\b(agenda\\s+\\d{4}|agenda\\s+di[aá]ria)\\b"
+
+# NOTAS/POST-IT
+- intent: buscar_produto
+  patterns:
+    - "(?i)\\b(post\\s*it|postit|sticky\\s*notes|bloco\\s+de\\s+notas)\\b"
+
+# CANETAS/LÁPIS/MARCA TEXTO
+- intent: buscar_produto
+  patterns:
+    - "(?i)\\b(caneta\\s+bic|caneta\\s+esferogr[aá]fica|caneta\\s+gel|roller)\\b"
+    - "(?i)\\b(l[aá]pis\\s+hb|l[aá]pis\\s+2b|l[aá]pis\\s+de\\s+cor)\\b"
+    - "(?i)\\b(marca\\s*texto|stabilo|grifa\\s*texto)\\b"
+    - "(?i)\\b(marcador\\s+permanente|pincel\\s+at[oô]mico|marcador\\s+quadro\\s+branco)\\b"
+
+# COLAS/FITAS
+- intent: buscar_produto
+  patterns:
+    - "(?i)\\b(cola\\s+branca|cola\\s+escolar|baston|bast[ãa]o)\\b"
+    - "(?i)\\b(fita\\s+adesiva|durex|fita\\s+larg(a|a)\\b|fita\\s+dupla\\s+face)\\b"
+
+# TESOURA/CLIPS/GRAMPO/PASTAS/ENVELOPES
+- intent: buscar_produto
+  patterns:
+    - "(?i)\\b(tesoura\\s+(escolar|papel)|tesoura\\s+\\d{2}\\s*cm)\\b"
+    - "(?i)\\b(clips?|clip\\s+binder|jacar[eé])\\b"
+    - "(?i)\\b(grampeador|grampos\\s+26\\/?6)\\b"
+    - "(?i)\\b(pasta\\s+of[ií]cio|pasta\\s+suspensa|sanfonada)\\b"
+    - "(?i)\\b(envelope\\s+(a4|of[ií]cio|pardo|kraft))\\b"
+    - "(?i)\\b(etiqueta(s)?\\s+(endere[cç]o|c[óo]digo\\s+de\\s+barras))\\b"
+
+# ENCADERNAÇÃO/QUADROS/ACESSÓRIOS
+- intent: buscar_produto
+  patterns:
+    - "(?i)\\b(espiraladora|encaderna[cç][aã]o|capa\\s+de\\s+encaderna[cç][aã]o|contra\\s+capa)\\b"
+    - "(?i)\\b(quadro\\s+branco|quadro\\s+de\\s+c[óo]rtica|memo\\s+board)\\b"
+    - "(?i)\\b(organizad(or|or(a))\\s+de\\s+mesa|porta\\s+objetos|suporte\\s+de\\s+celular|calculadora)\\b"
+    - "(?i)\\b(r[eé]gua\\s+\\d{2,3}\\s*cm|compasso|transferidor|kit\\s+geometria)\\b"
+
+# MÍDIA/TEC
+- intent: buscar_produto
+  patterns:
+    - "(?i)\\b(pen\\s*drive|pendrive|usb\\s*drive|mem[oó]ria\\s*usb)\\b"
+    - "(?i)\\b(spray\\s+ar\\s+comprimido|limpar\\s+teclado)\\b"
+
+# ==========================
+# OUTROS
+# ==========================
+
+- intent: outro
+  patterns:
+    - ".*"
