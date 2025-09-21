@@ -1,0 +1,72 @@
+version: "3.9"
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "2181:2181"
+    restart: unless-stopped
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    depends_on:
+      - zookeeper
+    ports:
+      - "29092:29092"     # acesso pelo host (fora do Docker)
+      - "9092:9092"       # acesso dentro da rede do Compose
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    restart: unless-stopped
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    depends_on:
+      - kafka
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:6
+    ports:
+      - "27017:27017"     # só precisa se você quiser acessar o Mongo do host
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+  consumer:
+    image: leobass18/papelaria-consumer:0.1   # use tag fixa (ou latest se preferir)
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_BOOTSTRAP: kafka:9092             # use o nome do serviço interno
+    restart: unless-stopped
+
+  chat:
+    image: leobass18/papelaria-chat:0.8.1     # use tag fixa (ou latest se preferir)
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_BOOTSTRAP: kafka:9092             # interno
+      MONGO_URI: mongodb://mongo:27017        # interno
+      STREAMLIT_SERVER_HEADLESS: "true"
+    ports:
+      - "8501:8501"
+    restart: unless-stopped
+    # (opcional) editar configs/dados sem rebuild:
+    # volumes:
+    #   - ./config:/workspace/config
+    #   - ./data:/workspace/data
+
+volumes:
+  mongo_data:

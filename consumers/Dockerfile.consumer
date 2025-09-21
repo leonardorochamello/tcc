@@ -1,0 +1,23 @@
+# Dockerfile para o CONSUMER
+FROM python:3.11-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl ca-certificates && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Dependências
+COPY consumers/requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Código do consumer
+COPY consumers/ /app/
+
+# IMPORTANTE:
+# Seu consumer_mongo.py já tem a URI do Atlas hardcoded (você pediu assim).
+# Então não precisamos setar MONGO_URI aqui.
+# Vamos apenas definir o bootstrap do Kafka com um padrão seguro.
+ENV KAFKA_BOOTSTRAP=host.docker.internal:29092
+
+# Executa o consumer
+CMD ["python", "-u", "consumer_mongo.py"]
