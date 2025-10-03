@@ -39,34 +39,61 @@ services:
   mongo:
     image: mongo:6
     ports:
-      - "27017:27017"     # só precisa se você quiser acessar o Mongo do host
+      - "27017:27017"
     volumes:
       - mongo_data:/data/db
     restart: unless-stopped
 
+  # === Novo serviço: OLLAMA =========================================
+  ollama:
+    image: ollama/ollama:latest
+    # Se a porta 11434 já estiver ocupada no host, remova a linha abaixo
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "bash", "-lc", "curl -fsS http://localhost:11434/api/tags >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+  # ==================================================================
+
   consumer:
-    image: leobass18/papelaria-consumer:0.1   # use tag fixa (ou latest se preferir)
+    image: leobass18/papelaria-consumer:0.1
     depends_on:
       - kafka
     environment:
-      KAFKA_BOOTSTRAP: kafka:9092             # use o nome do serviço interno
+      KAFKA_BOOTSTRAP: kafka:9092
     restart: unless-stopped
 
   chat:
-    image: leobass18/papelaria-chat:0.8.1     # use tag fixa (ou latest se preferir)
+    image: leobass18/papelaria-chat:0.8.1
     depends_on:
       - kafka
+      - ollama
     environment:
-      KAFKA_BOOTSTRAP: kafka:9092             # interno
-      MONGO_URI: mongodb://mongo:27017        # interno
+      KAFKA_BOOTSTRAP: kafka:9092
+      MONGO_URI: mongodb://mongo:27017
       STREAMLIT_SERVER_HEADLESS: "true"
+      # Agora aponta para o serviço 'ollama' da rede do Compose
+      OLLAMA_URL: http://ollama:11434/api/chat
+      LLM_MODEL: qwen2.5:7b-instruct-q4_K_M
+      LLM_TEMPERATURE: "0.3"                  # um pouco mais solto
+      LLM_NUM_CTX: "2048"                     # mais contexto
+      LLM_TIMEOUT_S: "20"                     # 20s é um teto bom
+      LLM_NUM_PREDICT: "160"                  # respostas um pouco mais ricas
+      LLM_KEEP_ALIVE: "2h"
+      LLM_NUM_THREAD: "0"                     # 0=auto; se souber, pode fixar (ex.: "6")
     ports:
       - "8501:8501"
     restart: unless-stopped
-    # (opcional) editar configs/dados sem rebuild:
-    # volumes:
-    #   - ./config:/workspace/config
-    #   - ./data:/workspace/data
+    volumes:
+      - ./app:/workspace/app
+      - ./config:/workspace/config
+      - ./data:/workspace/data
 
 volumes:
   mongo_data:
+  ollama_data:

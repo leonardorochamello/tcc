@@ -36,6 +36,10 @@
 - intent: adicionar_carrinho
   patterns:
     - "(?i)\\b(adiciona(r)?|coloca(r)?|por\\s+no\\s+carrinho|p[oô]e\\s+no\\s+carrinho|bota(r)?)\\b"
+    - "(?i)adiciona(r|rei|reiamos|rei?e)?"
+    - "(?i)adicione"
+    - "(?i)coloca(r)?( no carrinho)?"
+    - "(?i)p[ôo]e( no carrinho)?"
 
 - intent: remover_item
   patterns:
@@ -54,6 +58,9 @@
 - intent: checkout
   patterns:
     - "(?i)\\b(checkout|finalizar\\s+(compra|pedido)|fechar\\s+pedido|concluir\\s+compra)\\b"
+    - (?i)(finalizar|concluir|fechar)\s+(compra|pedido|carrinho)
+    - (?i)\bcheckout\b
+    - (?i)ir\s+para\s+o\s+pagamento
 
 - intent: pagar
   patterns:
